@@ -52,6 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let wrongAnswers = 0;
     let difficulty = 'medium';
     let touchStartX = null;
+    let maxHealth = 100;
+    let currentHealth = maxHealth;
     let isMovingLeft = false; // Added for hold movement
     let isMovingRight = false; // Added for hold movement
 
@@ -64,6 +66,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const enemySpawnRate = { easy: 7000, medium: 5000, hard: 3000 };
     const pointsCorrect = 100;
     const pointsWrong = -20;
+    currentHealth = maxHealth;
+updateHealthDisplay();
+
+// Add new function
+    function updateHealthDisplay() {
+        const healthBar = document.getElementById('health-bar');
+        if (healthBar) {
+            healthBar.style.width = `${(currentHealth / maxHealth) * 100}%`;
+        }
+    }
 
     const enemyTypes = [
         { type: 'dry-eye', label: 'Dry eye', correctShot: 'lubricant', color: '#17a2b8' },
@@ -374,6 +386,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         // console.log("Spawned enemy:", randomEnemyType.type, "at", spawnX, spawnY); // Can be spammy
     }
+    function moveEnemies() {
+    const currentEnemySpeed = enemySpeed[difficulty];
+    const gameH = gameHeight();
+
+    // Iterate backwards for safe removal
+    for (let i = enemies.length - 1; i >= 0; i--) {
+        const enemy = enemies[i];
+        enemy.y += currentEnemySpeed;
+        enemy.element.style.top = `${enemy.y}px`;
+
+        // Check if enemy reached bottom
+        if (gameH > 0 && enemy.y + enemy.element.offsetHeight > gameH) {
+            console.log("Enemy reached bottom:", enemy.type);
+            
+            // Add health penalty here
+            currentHealth -= 15; // Penalty amount
+            currentHealth = Math.max(0, currentHealth);
+            updateHealthDisplay();
+            
+            // Check for game over
+            if (currentHealth <= 0) {
+                endGame();
+            }
+            
+            removeElement(enemy.element);
+            enemies.splice(i, 1);
+        }
+    }
+}
 
     function moveShots() {
         // Iterate backwards for safe removal while iterating
@@ -394,23 +435,29 @@ document.addEventListener('DOMContentLoaded', () => {
     function moveEnemies() {
         const currentEnemySpeed = enemySpeed[difficulty];
         const gameH = gameHeight();
-
+    
         // Iterate backwards for safe removal
-         for (let i = enemies.length - 1; i >= 0; i--) {
+        for (let i = enemies.length - 1; i >= 0; i--) {
             const enemy = enemies[i];
             enemy.y += currentEnemySpeed;
             enemy.element.style.top = `${enemy.y}px`;
-
+    
             // Check if enemy reached bottom
             if (gameH > 0 && enemy.y + enemy.element.offsetHeight > gameH) {
-                 console.log("Enemy reached bottom:", enemy.type);
-                 // Optional: Deduct score or implement game over condition here
-                 // score -= 50;
-                 // score = Math.max(0, score);
-                 // updateScore();
-                 removeElement(enemy.element);
-                 enemies.splice(i, 1);
-                 // endGame(); // Uncomment if enemies reaching bottom ends the game
+                console.log("Enemy reached bottom:", enemy.type);
+                
+                // Add health penalty here
+                currentHealth -= 15; // Penalty amount
+                currentHealth = Math.max(0, currentHealth);
+                updateHealthDisplay();
+                
+                // Check for game over
+                if (currentHealth <= 0) {
+                    endGame();
+                }
+                
+                removeElement(enemy.element);
+                enemies.splice(i, 1);
             }
         }
     }
