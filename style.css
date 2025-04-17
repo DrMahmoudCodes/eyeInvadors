@@ -1,0 +1,336 @@
+/* Basic Reset & Body */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    -webkit-tap-highlight-color: transparent; /* Disable blue highlight on mobile tap */
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden; /* Prevent scrolling */
+    background-color: #f0f8ff; /* Light blue background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    touch-action: manipulation; /* Prevent double-tap zoom etc. */
+}
+
+/* Game Container */
+#game-container {
+    width: 100%;
+    max-width: 600px; /* Max width for larger screens */
+    height: 100%;
+    max-height: 900px; /* Max height */
+    background: linear-gradient(to bottom, #87CEEB, #4682B4); /* Sky blue gradient */
+    border: 5px solid #1e90ff;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+    position: relative; /* Needed for absolute positioning of screens */
+    overflow: hidden; /* Hide content outside game area */
+    display: flex;
+    flex-direction: column;
+}
+
+/* Screen Styling */
+.screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: none; /* Hidden by default */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.85); /* Slight overlay for readability */
+    backdrop-filter: blur(3px);
+}
+.screen.active {
+    display: flex; /* Show active screen */
+}
+
+#start-screen h1, #end-screen h1 {
+    color: #0056b3;
+    margin-bottom: 15px;
+}
+#start-screen p, #start-screen li {
+    margin-bottom: 10px;
+    color: #333;
+}
+#start-screen ul {
+    list-style: none;
+    padding: 0 15px;
+    margin-bottom: 15px;
+}
+#start-screen .matches-list {
+    font-size: 0.9em;
+    background-color: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+}
+#start-screen .matches-list .arrow {
+    color: #007bff;
+    font-weight: bold;
+}
+
+/* Buttons */
+button {
+    padding: 12px 25px;
+    font-size: 1rem;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: white;
+    margin: 5px;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+button:hover {
+    background-color: #0056b3;
+}
+button:active {
+    transform: scale(0.95);
+    background-color: #004085;
+}
+
+.difficulty-selection {
+    margin-bottom: 20px;
+}
+
+/* Game Screen Specifics */
+#game-screen {
+    background: none; /* Transparent to show game-container background */
+    backdrop-filter: none;
+    justify-content: flex-start; /* Align content to top */
+    padding: 0;
+}
+
+#hud {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: bold;
+    z-index: 10;
+}
+
+#game-area {
+    width: 100%;
+    flex-grow: 1; /* Takes remaining space */
+    position: relative; /* Crucial for positioning player, enemies, shots */
+    overflow: hidden; /* Important! */
+}
+
+#player {
+    width: 40px; /* Slightly narrower */
+    height: 60px; /* Keep height */
+    /* background-color: #e0e0e0; */ /* Fallback color */
+    background: linear-gradient(to bottom, #f8f9fa, #d3d9de); /* Light grey/white gradient */
+    /* background-image: url('placeholder_bottle.png'); */ /* Keep commented if using CSS shape */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    /* More specific border radius: Taper top, rounded bottom */
+    border-radius: 40% 40% 15px 15px;
+    position: absolute;
+    bottom: 15px; /* Slightly higher position */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    transition: left 0.1s linear; /* Smooth movement */
+    border: 1px solid #adb5bd; /* Subtle border */
+    box-shadow: inset 0 0 5px rgba(0,0,0,0.1); /* Inner shadow for depth */
+}
+
+/* Nozzle using a pseudo-element */
+#player::before {
+    content: '';
+    position: absolute;
+    top: -8px; /* Position above the main body */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 10px; /* Nozzle width */
+    height: 10px; /* Nozzle height */
+    background-color: #ced4da; /* Slightly darker grey */
+    border-radius: 3px 3px 0 0; /* Nozzle shape */
+    border: 1px solid #6c757d;
+    border-bottom: none;
+}
+
+/* --- Adjust Media Query for smaller player --- */
+
+
+.enemy {
+    width: 45px;
+    height: 45px;
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 50%; /* Make them roundish */
+    font-size: 10px; /* Smaller text for labels */
+    color: white;
+    text-align: center;
+    line-height: 45px; /* Center text vertically */
+    text-shadow: 1px 1px 2px black;
+    z-index: 4;
+    /* Specific enemy styles will be added by JS or here */
+}
+.enemy.red-eyes { background-color: #dc3545; /* Red */ }
+.enemy.allergic-conjunctivitis { background-color: #ffc107; /* Yellow */ }
+.enemy.dry-eye { background-color: #17a2b8; /* Cyan */ }
+.enemy.sore-eye { background-color: #fd7e14; /* Orange */ }
+.enemy.glaucoma { background-color: #6f42c1; /* Purple */ }
+
+.shot {
+    width: 8px;
+    height: 15px;
+    border-radius: 50%;
+    position: absolute;
+    z-index: 3;
+    box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+    /* Specific shot colors */
+}
+.shot.lubricant { background-color: #ADD8E6; /* Light Blue */ }
+.shot.antihistaminic { background-color: #FFD700; /* Gold */ }
+.shot.decongestant { background-color: #FFA07A; /* Light Salmon */ }
+.shot.cs { background-color: #F08080; /* Light Coral */ }
+.shot.ts { background-color: #9370DB; /* Medium Purple */ }
+
+#controls {
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px 0;
+    z-index: 10;
+}
+
+#shot-selection {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    margin-bottom: 10px;
+}
+
+#shot-selection .shot-btn {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+    margin: 3px;
+    min-width: 80px; /* Minimum width */
+}
+/* Highlight selected shot */
+#shot-selection .shot-btn.selected {
+    border: 2px solid #fff;
+    box-shadow: 0 0 10px #fff;
+}
+/* Color coding buttons (optional but helpful) */
+.shot-btn[data-shot-type="lubricant"] { background-color: #ADD8E6; color: #333; }
+.shot-btn[data-shot-type="antihistaminic"] { background-color: #FFD700; color: #333; }
+.shot-btn[data-shot-type="decongestant"] { background-color: #FFA07A; color: #333; }
+.shot-btn[data-shot-type="cs"] { background-color: #F08080; color: #333; }
+.shot-btn[data-shot-type="ts"] { background-color: #9370DB; color: white; }
+
+
+#mobile-controls {
+    display: flex; /* Changed from none to flex by default */
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+}
+
+#mobile-controls button {
+    font-size: 1.5rem; /* Larger buttons for touch */
+    padding: 10px 20px;
+}
+
+/* End Screen Styling */
+#end-screen div {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+}
+#badge-image {
+    width: 100px;
+    height: 100px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+#badge-name {
+    font-weight: bold;
+}
+
+/* Animation for explosions (simple fade out) */
+.explosion {
+    animation: explode 0.3s ease-out forwards;
+}
+
+@keyframes explode {
+    0% { transform: scale(1); opacity: 1; }
+    100% { transform: scale(1.5); opacity: 0; }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 600px) {
+    button {
+        padding: 10px 15px;
+        font-size: 0.9rem;
+    }
+    #hud {
+        font-size: 1rem;
+        padding: 8px 15px;
+    }
+     /* ... other rules ... */
+     #player {
+        width: 35px; /* Adjusted size */
+        height: 50px; /* Adjusted size */
+        bottom: 10px;
+    }
+    #player::before {
+        top: -6px;
+        width: 8px;
+        height: 8px;
+    }
+    /* ... other rules ... */
+    .enemy {
+        width: 35px;
+        height: 35px;
+        line-height: 35px;
+        font-size: 8px;
+    }
+     #shot-selection .shot-btn {
+        padding: 6px 8px;
+        font-size: 0.7rem;
+        min-width: 65px;
+     }
+     #mobile-controls button {
+        font-size: 1.2rem;
+        padding: 8px 15px;
+    }
+}
+
+@media (max-width: 400px) {
+    #hud {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+    }
+     #shot-selection .shot-btn {
+        padding: 5px 6px;
+        font-size: 0.6rem;
+        min-width: 55px;
+     }
+}
+
+/* Hide mobile controls on devices that likely have a keyboard */
+@media (min-width: 769px) { /* Adjust breakpoint as needed */
+    /* You could hide mobile controls here, but it's often better
+       to leave them for accessibility or devices with touch AND keyboard.
+       Let's rely on JS checking touch support instead, or leave them visible. */
+     /* #mobile-controls { display: none; } */
+}

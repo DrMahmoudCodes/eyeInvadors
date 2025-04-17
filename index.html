@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Eye Drops Invaders</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+
+        <div id="start-screen" class="screen active">
+            <h1>Eye Drops Invaders</h1>
+            <p>Defend against eye symptoms!</p>
+            <p>Select Difficulty:</p>
+            <div class="difficulty-selection">
+                <button class="difficulty-btn" data-difficulty="easy">Easy</button>
+                <button class="difficulty-btn" data-difficulty="medium">Medium</button>
+                <button class="difficulty-btn" data-difficulty="hard">Hard</button>
+            </div>
+            <h2>How to Play:</h2>
+            <ul>
+                <li>Move the eye drops bottle left/right.</li>
+                <li>Select the correct eye drop type for the incoming symptom.</li>
+                <li>Shoot the symptoms!</li>
+                <li>Correct shots earn more points.</li>
+                <li>Survive for 3 minutes!</li>
+            </ul>
+            <!-- <p><strong>Correct Matches:</strong></p>
+            <ul class="matches-list">
+                <li>Lubricant <span class="arrow">&rarr;</span> Dry Eye</li>
+                <li>Anti-Histaminic <span class="arrow">&rarr;</span> Allergic Conjunctivitis</li>
+                <li>Decongestant <span class="arrow">&rarr;</span> Sore Eye</li>
+                <li>CS <span class="arrow">&rarr;</span> Red Eyes</li>
+                <li>TS <span class="arrow">&rarr;</span> Glaucoma</li>
+            </ul> -->
+        </div>
+
+        <div id="game-screen" class="screen">
+            <div id="hud">
+                <div id="score">Score: 0</div>
+                <div id="timer">Time: 03:00</div>
+            </div>
+            <div id="game-area">
+                <div id="player"></div>
+                </div>
+            <div id="controls">
+                 <div id="shot-selection">
+                    <button class="shot-btn" data-shot-type="lubricant">SYSTAN</button>
+                    <button class="shot-btn" data-shot-type="antihistaminic">PATANOL</button>
+                    <button class="shot-btn" data-shot-type="decongestant">RIAZOLIN</button>
+                    <button class="shot-btn" data-shot-type="cs">CROMA</button>
+                    <button class="shot-btn" data-shot-type="ts">APIMOL</button>
+                </div>
+                <div id="mobile-controls">
+                    <button id="move-left">&larr;</button>
+                    <button id="shoot-btn">Shoot</button>
+                    <button id="move-right">&rarr;</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="end-screen" class="screen">
+            <h1>Game Over!</h1>
+            <div id="final-score">Final Score: 0</div>
+            <div id="correct-answers">Correct Shots: 0</div>
+            <div id="wrong-answers">Wrong Shots: 0</div>
+            <div id="badge">Badge: <span id="badge-name"></span></div>
+            <img id="badge-image" src="" alt="Badge">
+            <button id="play-again-btn">Play Again</button>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
